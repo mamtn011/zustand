@@ -70,10 +70,10 @@ const { count, increaseCount } = useStore();
 
 **4. Changing state value:**
 
-- We can change state value using methods in callback function. The callback function can receive a function which to be returend by method, and this function pass another callback function and it can receive state. This callback function return an object with property we want to change. ( little complicated - keep eyes on the code and read explanation )
+- We can change state value using methods in callback function. The callback function can receive a function which to be returend by method, and this function pass another callback function and it can receive state. This callback function return an object with property we want to change. ( **little complicated** - keep eyes on the code and read explanation )
 
 ```js
-// BLOCK - 2
+// BLOCK - 1
 const useStore = create((set => ({
  count: 0,
  increaseCount: () => set((state) => ({ count: state.count + 1 })),
@@ -94,3 +94,44 @@ const useStore = create((set => ({
 ```
 
 The methods can receive params and we can use them for changing state value. Look at increaseBy method. It received a param num and num has been used to change the value of count state. Now look at resetCount method. We can fix the value of our state like this.
+
+**5. Best Practice:**
+
+- Keeping states and medthods outside the create() function is best practice.
+
+```js
+const initialStates = {
+  count: 0,
+};
+const useStore = create((set) => ({
+  ...initialStates,
+  // count: 0,
+  // increaseCount: () => set((state) => ({ count: state.count + 1 })),
+}));
+
+export const increaseCount = () =>
+  useStore.setState((state) => ({ count: state.count + 1 }));
+```
+
+Here, we took a variable and initialize an object with state. Then we destructure it inside create() function. Also we keeped increaseCount method ouside the create(). Look carefully, here we export it, because we didn't get it in useStore() hook. Now we have to import it in component to use it. Also we didn't get set function here. That's why, instead of set function we have to use useStore.setState().
+
+We can keep methods in a extra file like .. action.js
+
+```js
+// action.js file
+import useStore from "./store.count";
+// we need to import useStore to use it
+export const increaseCount = () =>
+  useStore.setState((state) => ({ count: state.count + 1 }));
+
+export const decreaseCount = () =>
+  useStore.setState((state) => ({ count: state.count - 1 }));
+
+export const increaseBy = (num) =>
+  useStore.setState((state) => ({ count: state.count + num }));
+
+export const decreaseBy = (num) =>
+  useStore.setState((state) => ({ count: state.count - num }));
+
+export const resetCount = () => useStore.setState(() => ({ count: 0 }));
+```

@@ -2,6 +2,14 @@ import { Typography, Container, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Stack } from "@mui/system";
 import useStore from "../store/store.count";
+import {
+  increaseCount,
+  decreaseCount,
+  resetCount,
+  increaseBy,
+  decreaseBy,
+} from "../store/actions";
+
 const containerStyle = {
   minHeight: "100vh",
   display: "flex",
@@ -22,14 +30,7 @@ const PrimaryButton = styled(Button)(({ theme }) => ({
 const Counter = (props) => {
   //const count = useStore((state) => state.count);
   //const increaseCount = useStore((state) => state.increaseCount);
-  const {
-    count,
-    increaseCount,
-    decreaseCount,
-    resetCount,
-    increaseBy,
-    decreaseBy,
-  } = useStore();
+  const { count } = useStore();
   return (
     <Container sx={containerStyle}>
       <Typography>{count}</Typography>
