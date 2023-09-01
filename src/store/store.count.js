@@ -28,6 +28,6 @@ const useStore = create((set) => ({
 //   useStore.setState((state) => ({ count: state.count - num }));
 
 // export const resetCount = () => useStore.setState(() => ({ count: 0 }));
-// we can write them in different file
+// we can write them in a file
 
 export default useStore;

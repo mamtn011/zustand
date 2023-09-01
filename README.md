@@ -74,11 +74,10 @@ const { count, increaseCount } = useStore();
 
 ```js
 // BLOCK - 1
-const useStore = create((set => ({
- count: 0,
- increaseCount: () => set((state) => ({ count: state.count + 1 })),
- decreaseCount: () => set((state) => ({ count: state.count - 1 })),
-
+const useStore = create((set) => ({
+  count: 0,
+  increaseCount: () => set((state) => ({ count: state.count + 1 })),
+  decreaseCount: () => set((state) => ({ count: state.count - 1 })),
 }));
 ```
 
@@ -86,16 +85,30 @@ Here callback function of create() reaceived a function named **set** which is r
 
 ```js
 // BLOCK - 2
-const useStore = create((set => ({
- count: 0,
- increaseBy: (num) => set((state) => ({ count: state.count + num })),
- resetCount: () => set(() => ({ count: 0 })),
+const useStore = create((set) => ({
+  count: 0,
+  increaseBy: (num) => set((state) => ({ count: state.count + num })),
+  resetCount: () => set(() => ({ count: 0 })),
 }));
 ```
 
 The methods can receive params and we can use them for changing state value. Look at increaseBy method. It received a param num and num has been used to change the value of count state. Now look at resetCount method. We can fix the value of our state like this.
 
-**5. Best Practice:**
+**5. Getting state inside method:**
+
+- Like **set** we cllback function can receive **get** and using it we can get state inside methods.
+
+```js
+const useStore = create((set, get) => ({
+  count: 0,
+  increaseBy: (num) => {
+    const count = get().count; // here we get state value
+    set((state) => ({ count: state.count + num }));
+  },
+}));
+```
+
+**6. Best Practice:**
 
 - Keeping states and medthods outside the create() function is best practice.
 
@@ -135,3 +148,5 @@ export const decreaseBy = (num) =>
 
 export const resetCount = () => useStore.setState(() => ({ count: 0 }));
 ```
+
+**NB: A method outside the object is an action, so we should call it action.**
