@@ -150,3 +150,108 @@ export const resetCount = () => useStore.setState(() => ({ count: 0 }));
 ```
 
 **NB: A method outside the object is an action, so we should call it action.**
+
+## 5. Advanced Guides
+
+**1. Asynchronous actions:**
+
+- We can define asynchronous actions like this.. Or we can write them in an extra file.
+
+```js
+import axios from "axios";
+import { create } from "zustand";
+
+const initialStates = {
+  users: [],
+};
+const useUsers = create((set, get) => ({
+  ...initialStates,
+  getUsers: async () => {
+    const { data } = await axios.get(`http://localhost:4000/users`);
+    set(() => ({ users: data }));
+  },
+  addUser: async (dataToAdd) => {
+    const { data } = await axios.post(`http://localhost:4000/users`, dataToAdd);
+    const users = get().users;
+    users.push(data);
+    set(() => ({ users }));
+  },
+
+  deleteUser: async (id) => {
+    await axios.delete(`http://localhost:4000/users/${id}`);
+    const users = get().users.filter((user) => user.id != id);
+    set(() => ({ users }));
+  },
+}));
+
+export default useUsers;
+```
+
+**2. Redux in Zustand:**
+
+- We can write your code like redux using zustand. To do this we have to import create from zustand and redux from zustand/middleware.
+
+```js
+import { create } from "zustand";
+import { redux } from "zustand/middleware";
+```
+
+- Here redux is a function. create function will pass redux and redux will pass two things (reducer and initial states)
+
+```js
+const useStoreRedux = create(redux(reducer, initialStates));
+```
+
+- reducer function will receive states and action like Redux. and we can manage our actions using switch.
+
+```js
+const reducer = (state, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case types.increase:
+      return { count: state.count + 1 };
+    case types.decrease:
+      return { count: state.count - 1 };
+    case types.increaseBy:
+      return { count: state.count + payload };
+    case types.decreaseBy:
+      return { count: state.count - payload };
+    case types.reset:
+      return { count: 0 };
+    default:
+      return initialStates;
+  }
+};
+```
+
+- Here action is an object witch is passed from dispatch function.
+
+```js
+<PrimaryButton onClick={() => dispatch({ type: types.increase })}>
+  +
+</PrimaryButton>
+
+<PrimaryButton onClick={() => dispatch({ type: types.increaseBy, payload: 10 })}>
+  increase by 10
+</PrimaryButton>
+```
+
+- We will get states and dispatch function from useStoreRedux hool.
+
+```js
+const { count, dispatch } = useStoreRedux();
+```
+
+- To manage actions, we have to initialize actions types like...
+
+```js
+export const types = {
+  increase: "INCREASE",
+  decrease: "DECREASE",
+  increaseBy: "INCREASE_BY",
+  decreaseBy: "DECREASE_BY",
+  reset: "RESET",
+};
+```
+
+**NB:** For better understanding please look up **store.count.redux.js and ActionsLikeRedux.js.** files.
