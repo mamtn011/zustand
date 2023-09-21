@@ -19,7 +19,7 @@ const useUsers = create((set, get) => ({
 
   deleteUser: async (id) => {
     await axios.delete(`http://localhost:4000/users/${id}`);
-    const users = get().users.filter((user) => user.id != id);
+    const users = get().users.filter((user) => user.id !== id);
     set(() => ({ users }));
   },
 }));

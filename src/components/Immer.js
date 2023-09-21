@@ -24,16 +24,40 @@ const PrimaryButton = styled(Button)(({ theme }) => ({
 
 const Immer = () => {
   const {
+    // apple and watermelon is done using slice pattern..
     apple,
-    watermelon,
-    mango,
-    banana,
-    grapes,
-    coconut,
-    cucumber,
-    broccoli,
-    tomato,
     addApple,
+    removeApple,
+    watermelon,
+    addWatermelon,
+    removeWatermelon,
+
+    // mango, banana, broccoli, tomato is done using immer
+    // destructured from nested object
+    count: {
+      fruits: { mango, banana },
+      vagetables: { broccoli, tomato },
+    },
+    addMango,
+    removeMango,
+    addBanana,
+    removeBanana,
+    addBroccoli,
+    removeBroccoli,
+    addTomato,
+    removeTomato,
+
+    grapes,
+    addGrapes,
+    removeGrapes,
+
+    coconut,
+    addCoconut,
+    removeCoconut,
+
+    cucumber,
+    addCucumber,
+    removeCucumber,
   } = useStoreImmer();
 
   return (
@@ -47,7 +71,9 @@ const Immer = () => {
             <PrimaryButton fullWidth onClick={addApple}>
               +
             </PrimaryButton>
-            <PrimaryButton fullWidth>-</PrimaryButton>
+            <PrimaryButton fullWidth onClick={removeApple}>
+              -
+            </PrimaryButton>
           </Stack>
         </Grid>
 
@@ -56,8 +82,12 @@ const Immer = () => {
             <Typography variant="h4">🍉</Typography>
             <Typography variant="body1">Watermelon</Typography>
             <Typography variant="h3">{watermelon}</Typography>
-            <PrimaryButton fullWidth>+</PrimaryButton>
-            <PrimaryButton fullWidth>-</PrimaryButton>
+            <PrimaryButton fullWidth onClick={addWatermelon}>
+              +
+            </PrimaryButton>
+            <PrimaryButton fullWidth onClick={removeWatermelon}>
+              -
+            </PrimaryButton>
           </Stack>
         </Grid>
 
@@ -66,8 +96,12 @@ const Immer = () => {
             <Typography variant="h4">🥭</Typography>
             <Typography variant="body1">Mango</Typography>
             <Typography variant="h3">{mango}</Typography>
-            <PrimaryButton fullWidth>+</PrimaryButton>
-            <PrimaryButton fullWidth>-</PrimaryButton>
+            <PrimaryButton fullWidth onClick={addMango}>
+              +
+            </PrimaryButton>
+            <PrimaryButton fullWidth onClick={removeMango}>
+              -
+            </PrimaryButton>
           </Stack>
         </Grid>
 
@@ -76,38 +110,12 @@ const Immer = () => {
             <Typography variant="h4">🍌</Typography>
             <Typography variant="body1">Banana</Typography>
             <Typography variant="h3">{banana}</Typography>
-            <PrimaryButton fullWidth>+</PrimaryButton>
-            <PrimaryButton fullWidth>-</PrimaryButton>
-          </Stack>
-        </Grid>
-
-        <Grid item sm={4}>
-          <Stack spacing={1} alignItems="center">
-            <Typography variant="h4">🍇</Typography>
-            <Typography variant="body1">Grapes</Typography>
-            <Typography variant="h3">{grapes}</Typography>
-            <PrimaryButton fullWidth>+</PrimaryButton>
-            <PrimaryButton fullWidth>-</PrimaryButton>
-          </Stack>
-        </Grid>
-
-        <Grid item sm={4}>
-          <Stack spacing={1} alignItems="center">
-            <Typography variant="h4">🥥</Typography>
-            <Typography variant="body1">Coconut</Typography>
-            <Typography variant="h3">{coconut}</Typography>
-            <PrimaryButton fullWidth>+</PrimaryButton>
-            <PrimaryButton fullWidth>-</PrimaryButton>
-          </Stack>
-        </Grid>
-
-        <Grid item sm={4}>
-          <Stack spacing={1} alignItems="center">
-            <Typography variant="h4">🥒 </Typography>
-            <Typography variant="body1">Cucumber</Typography>
-            <Typography variant="h3">{cucumber}</Typography>
-            <PrimaryButton fullWidth>+</PrimaryButton>
-            <PrimaryButton fullWidth>-</PrimaryButton>
+            <PrimaryButton fullWidth onClick={addBanana}>
+              +
+            </PrimaryButton>
+            <PrimaryButton fullWidth onClick={removeBanana}>
+              -
+            </PrimaryButton>
           </Stack>
         </Grid>
 
@@ -116,8 +124,12 @@ const Immer = () => {
             <Typography variant="h4">🥦</Typography>
             <Typography variant="body1">Broccoli</Typography>
             <Typography variant="h3">{broccoli}</Typography>
-            <PrimaryButton fullWidth>+</PrimaryButton>
-            <PrimaryButton fullWidth>-</PrimaryButton>
+            <PrimaryButton fullWidth onClick={addBroccoli}>
+              +
+            </PrimaryButton>
+            <PrimaryButton fullWidth onClick={removeBroccoli}>
+              -
+            </PrimaryButton>
           </Stack>
         </Grid>
 
@@ -126,8 +138,54 @@ const Immer = () => {
             <Typography variant="h4">🍅 </Typography>
             <Typography variant="body1">Tomato</Typography>
             <Typography variant="h3">{tomato}</Typography>
-            <PrimaryButton fullWidth>+</PrimaryButton>
-            <PrimaryButton fullWidth>-</PrimaryButton>
+            <PrimaryButton fullWidth onClick={addTomato}>
+              +
+            </PrimaryButton>
+            <PrimaryButton fullWidth onClick={removeTomato}>
+              -
+            </PrimaryButton>
+          </Stack>
+        </Grid>
+
+        <Grid item sm={4}>
+          <Stack spacing={1} alignItems="center">
+            <Typography variant="h4">🍇</Typography>
+            <Typography variant="body1">Grapes</Typography>
+            <Typography variant="h3">{grapes}</Typography>
+            <PrimaryButton fullWidth onClick={addGrapes}>
+              +
+            </PrimaryButton>
+            <PrimaryButton fullWidth onClick={removeGrapes}>
+              -
+            </PrimaryButton>
+          </Stack>
+        </Grid>
+
+        <Grid item sm={4}>
+          <Stack spacing={1} alignItems="center">
+            <Typography variant="h4">🥥</Typography>
+            <Typography variant="body1">Coconut</Typography>
+            <Typography variant="h3">{coconut}</Typography>
+            <PrimaryButton fullWidth onClick={addCoconut}>
+              +
+            </PrimaryButton>
+            <PrimaryButton fullWidth onClick={removeCoconut}>
+              -
+            </PrimaryButton>
+          </Stack>
+        </Grid>
+
+        <Grid item sm={4}>
+          <Stack spacing={1} alignItems="center">
+            <Typography variant="h4">🥒 </Typography>
+            <Typography variant="body1">Cucumber</Typography>
+            <Typography variant="h3">{cucumber}</Typography>
+            <PrimaryButton fullWidth onClick={addCucumber}>
+              +
+            </PrimaryButton>
+            <PrimaryButton fullWidth onClick={removeCucumber}>
+              -
+            </PrimaryButton>
           </Stack>
         </Grid>
       </Grid>

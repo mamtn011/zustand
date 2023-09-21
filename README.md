@@ -189,7 +189,7 @@ export default useUsers;
 
 **2. Redux in Zustand:**
 
-- We can write your code like redux using zustand. To do this we have to import create from zustand and redux from zustand/middleware.
+- We can write our code like redux using zustand. To do this we have to import create from zustand and redux from zustand/middleware.
 
 ```js
 import { create } from "zustand";
@@ -255,3 +255,176 @@ export const types = {
 ```
 
 **NB:** For better understanding please look up **store.count.redux.js and ActionsLikeRedux.js.** files.
+
+**3. Slice pattern:**
+
+- Slice pattern is keeping multiple states into small slices for increasing code redability. Suppose, this is our sotre.
+
+```js
+const useStoreImmer = create((set) => ({
+  apple: 0,
+  addApple: () => set((state) => ({ apple: state.apple + 1 })),
+  removeApple: () => set((state) => ({ apple: state.apple - 1 })),
+
+  watermelon: 0,
+  addWatermelon: () => set((state) => ({ watermelon: state.watermelon + 1 })),
+  removeWatermelon: () =>
+    set((state) => ({ watermelon: state.watermelon - 1 })),
+}));
+```
+
+- Now we can slice apple and watermelon and keep then in different files like this..
+
+```js
+export const appleSlice = (set) => ({
+  apple: 0,
+  addApple: () => set((state) => ({ apple: state.apple + 1 })),
+  removeApple: () => set((state) => ({ apple: state.apple - 1 })),
+});
+
+export const watermelonSlice = (set) => ({
+  watermelon: 0,
+  addWatermelon: () => set((state) => ({ watermelon: state.watermelon + 1 })),
+  removeWatermelon: () =>
+    set((state) => ({ watermelon: state.watermelon - 1 })),
+});
+```
+
+- Now we can import them and keep in our store like this.
+
+```js
+import { appleSlice } from "./slice/appleSlice";
+import { watermelonSlice } from "./slice/watermelonSlice";
+
+const useStoreImmer = create((set) => ({
+  ...appleSlice(set),
+  ...watermelonSlice(set),
+}));
+```
+
+**4. Update deeply nested object using Immer:**
+
+- Immer is a 3rd party packege that allows us to work with immutable state in a more convenient way. Suppose we have this code
+
+```js
+const useStoreImmer = create((set) => ({
+  count: {
+    fruits: {
+      mango: 0,
+      banana: 0,
+    },
+    vagetables: {
+      broccoli: 0,
+      tomato: 0,
+    },
+  },
+}));
+```
+
+- Now if we need to update them then we have to write like this
+
+```js
+const useStoreImmer = create((set) => ({
+  count: {
+    fruits: {
+      mango: 0,
+      banana: 0,
+    },
+    vagetables: {
+      broccoli: 0,
+      tomato: 0,
+    },
+  },
+
+  addMango: () =>
+    set((state) => ({
+      count: {
+        ...state.count,
+        fruits: { ...state.count.fruits, mango: state.count.fruits.mango + 1 },
+      },
+    })),
+
+  removeBanana: () =>
+    set((state) => ({
+      count: {
+        ...state.count,
+        fruits: {
+          ...state.count.fruits,
+          banana: state.count.fruits.banana - 1,
+        },
+      },
+    })),
+}));
+```
+
+- to avaid this complicity we can use immer. 1st of all we need to install immer and import produce form immer
+
+```js
+nmp i immer
+import {produce} from "immer";
+
+```
+
+- now using produce function we can manage it in easy way like this..
+
+```js
+const useStoreImmer = create((set) => ({
+  count: {
+    fruits: {
+      mango: 0,
+      banana: 0,
+    },
+    vagetables: {
+      broccoli: 0,
+      tomato: 0,
+    },
+  },
+
+  addMango: () =>
+    set(
+      produce((state) => {
+        ++state.count.fruits.mango;
+      })
+    ),
+  removeBanana: () =>
+    set(
+      produce((state) => {
+        --state.count.fruits.banana;
+      })
+    ),
+}));
+```
+
+- We can also use immer middleware for removing produce function. Here we have to import immer from zustand/middleware/immer
+
+```js
+import { immer } from "zustand/middleware/immer";
+```
+
+- Now, we can use immer function and remove produce function like this.
+
+```js
+const useStoreImmer = create(
+  immer((set) => ({
+    count: {
+      fruits: {
+        mango: 0,
+        banana: 0,
+      },
+      vagetables: {
+        broccoli: 0,
+        tomato: 0,
+      },
+    },
+
+    addMango: () =>
+      set((state) => {
+        ++state.count.fruits.mango;
+      }),
+    removeBanana: () =>
+      set((state) => {
+        --state.count.fruits.banana;
+      }),
+  }))
+);
+```
